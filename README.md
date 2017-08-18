@@ -1,5 +1,7 @@
-# Wearesho Studio Website
-[Visit us](https://wearesho.com)
+# {ProjectName}
+[![Build Status](https://travis-ci.org/owner/repository.svg?branch=master)](https://travis-ci.org/owner/repository)
+[![codecov](https://codecov.io/gh/owner/repository/branch/master/graph/badge.svg)](https://codecov.io/gh/owner/repository)
+
 
 ## Running tests
 To run all tests just use `npm test`
@@ -16,6 +18,11 @@ npm run e2e
 ### Unit Tests (Mocha)
 ```bash
 npm run unit
+```
+
+### TSLint
+```bash
+npm run lint
 ```
 
 ## Deployment

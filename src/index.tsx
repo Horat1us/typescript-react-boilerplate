@@ -1,15 +1,15 @@
-import '../styles/main.scss';
+import "../styles/main.scss";
 
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
+import * as React from "react";
+import * as ReactDOM from "react-dom";
 
-import Layout from './components/Layout';
-import PreLoader from './components/PreLoader';
+import {PreLoader, Layout} from "./components";
 
-const container = document.getElementById('content-overlay');
-const preLoaderElement = document.getElementById('pre-loader');
+const container = document.getElementById("content-overlay");
+const preLoaderElement = document.getElementById("pre-loader");
 
 if (!container) {
+    // tslint:disable-next-line
     console.error("Can not found element for mounting Layout!");
 } else {
     ReactDOM.render(
