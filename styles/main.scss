@@ -1,5 +1,13 @@
-// Here will be imports only
+// dependencies
+@import "~compass-mixins/lib/compass/css3";
+@import '~normalize.css/normalize.css';
+// base
+@import "base/reset";
+@import "base/global";
+@import "base/variables";
+@import "base/mixins";
 
+// demo styles, should be removed
 body {
   background-color: aliceblue;
   padding: 0;

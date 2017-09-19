@@ -1,9 +1,10 @@
+// tslint:disable-next-line
 /// <reference path="./steps.d.ts" />
 
 Feature("Main Page");
 
-Scenario('Main Page opening', async (I) => {
+Scenario("Main Page opening", async (I) => {
 
-    I.amOnPage('/');
-    I.see('Hello, World!');
+    I.amOnPage("/");
+    I.see("Hello, world!");
 });

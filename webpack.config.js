@@ -56,6 +56,7 @@ const config = {
             modules: [
                 path.resolve('node_modules'),
                 path.resolve('src'),
+                path.resolve('styles'),
             ],
         },
 
@@ -123,7 +124,7 @@ const config = {
                         {
                             loader: "babel-loader",
                             query: {
-                                presets: ['es2015', 'react', 'stage-2'],
+                                presets: ["latest"],
                             },
                         },
                         "awesome-typescript-loader",
