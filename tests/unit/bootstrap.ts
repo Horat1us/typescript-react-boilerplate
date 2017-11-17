@@ -1,5 +1,13 @@
 // Here will be loaded some very important dependencies
-import * as chai from "chai";
-import * as chaiEnzyme from "chai-enzyme";
+// tslint:disable:no-submodule-imports
+import "regenerator-runtime/runtime"
 
-chai.use(chaiEnzyme());
+import * as Enzyme from "enzyme";
+import * as Adapter from "enzyme-adapter-react-16";
+
+Enzyme.configure({adapter: new Adapter()});
+
+const placeholder = () => undefined;
+
+require.extensions[".png"] = placeholder;
+require.extensions[".jpg"] = placeholder;

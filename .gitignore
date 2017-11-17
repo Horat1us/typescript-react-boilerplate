@@ -4,4 +4,7 @@ node_modules/
 web/
 tests/acceptance/*.js
 tests/acceptance/*.js.map
+tests/output/
+src/**/*.js
+src/**/*.js.map
 .nyc_output
