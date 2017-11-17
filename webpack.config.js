@@ -16,7 +16,6 @@ const
     HtmlWebpackPlugin = require('html-webpack-plugin'),
     FaviconsWebpackPlugin = require('favicons-webpack-plugin'),
     CriticalPlugin = require('webpack-plugin-critical').CriticalPlugin,
-    CleanWebpackPlugin = require('clean-webpack-plugin'),
     CopyWebpackPlugin = require('copy-webpack-plugin'),
     ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 
@@ -35,19 +34,22 @@ const entry = !debug
         modern: ["babel-regenerator-runtime", "./src/index.tsx"],
         legacy: ["babel-polyfill", "./src/index.tsx"],
     }
-    : ["babel-regenerator-runtime", "./src/index.tsx"];
+    : [ "webpack-dev-server/client?http://0.0.0.0:8089/", "babel-regenerator-runtime", "./src/index.tsx"];
 
 const config = {
         entry,
         devServer: {
+            host: '0.0.0.0',
             publicPath: "/",
             contentBase: './web',
             noInfo: false,
             hot: true,
             inline: true,
-            open: true,
             historyApiFallback: true,
             port: 8089,
+            stats: { 
+                colors: true 
+            }
         },
 
         output: {
@@ -173,7 +175,6 @@ const config = {
                 publicPath: '/',
             }),
             new webpack.NamedModulesPlugin(),
-            new CleanWebpackPlugin([path.resolve('./web')]),
             new webpack.IgnorePlugin(/caniuse-lite\/data\/regions/),
             new HtmlWebpackPlugin({
                 title: "Wearesho",
