@@ -7,7 +7,8 @@
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
-    "skipDefaultLibCheck": true
+    "skipDefaultLibCheck": true,
+    "allowJs": true
   },
   "exclude": [
     "./node_modules/**/*",

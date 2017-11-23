@@ -7,7 +7,7 @@ import * as Adapter from "enzyme-adapter-react-16";
 
 Enzyme.configure({adapter: new Adapter()});
 
-const placeholder = () => undefined;
+const placeholder = (() => undefined)();
 
 require.extensions[".png"] = placeholder;
 require.extensions[".jpg"] = placeholder;
