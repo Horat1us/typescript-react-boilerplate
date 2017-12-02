@@ -16,7 +16,7 @@ describe("<Layout />", () => {
 
     it("Should hide and show preloader on mount/unmount", () => {
         const element = document.createElement("div");
-        const preLoader: PreLoaderInterface = new PreLoader(element);
+        const preLoader: PreLoaderInterface = new PreLoader(element, 10);
 
         spy(preLoader, "show");
         spy(preLoader, "hide");

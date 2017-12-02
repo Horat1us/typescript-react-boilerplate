@@ -5,9 +5,13 @@
     "sourceMap": true,
     "removeComments": true,
     "moduleResolution": "node",
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "allowJs": true
   },
   "exclude": [
-    "./node_modules/**/*"
+    "./node_modules/**/*",
+    "./tests/*"
   ]
 }

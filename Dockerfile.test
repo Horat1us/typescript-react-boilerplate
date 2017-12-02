@@ -1,0 +1,16 @@
+FROM node:8
+
+ARG version=1.0.0
+
+WORKDIR /usr/src/site
+
+RUN npm i -g mocha nyc
+
+COPY package.json .
+COPY package-lock.json .
+COPY tsconfig.json .
+
+RUN npm i
+
+EXPOSE 8089
+CMD ["./node_modules/.bin/cross-env", "NODE_ENV=test", "nyc", "--reporter=html", "mocha", "-r", "jsdom-global/register", "-r", "ts-node/register", "-r", "source-map-support/register", "tests/unit/**.ts", "tests/unit/**.tsx"]

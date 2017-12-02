@@ -1,0 +1,17 @@
+FROM node:8
+
+ARG version=1.0.0
+
+WORKDIR /usr/src/site
+
+RUN npm i -g codeceptjs
+RUN npm i -g tsc
+
+COPY package.json .
+COPY package-lock.json .
+COPY tsconfig.json .
+
+RUN npm i
+
+EXPOSE 8089
+CMD ["tsc", "codeceptjs", "run"]

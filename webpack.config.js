@@ -4,7 +4,7 @@
  *
  * This file is Dark and full of Terrors
  */
-
+// tslint:disable
 const
     path = require('path'),
     fs = require('fs'),
@@ -16,12 +16,12 @@ const
     HtmlWebpackPlugin = require('html-webpack-plugin'),
     FaviconsWebpackPlugin = require('favicons-webpack-plugin'),
     CriticalPlugin = require('webpack-plugin-critical').CriticalPlugin,
-    CleanWebpackPlugin = require('clean-webpack-plugin'),
-    CopyWebpackPlugin = require('copy-webpack-plugin');
+    CopyWebpackPlugin = require('copy-webpack-plugin'),
+    ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 
 const debug = process.env.NODE_ENV !== 'production';
 const env = debug ? 'local' : 'production';
-const favicon = path.resolve('./images/favicon.png');
+const favicon = path.resolve('./templates/favicon.png');
 
 const isApache = (process.env.APACHE || 0) === '1';
 console.log("Running in " + env + " environment. Debug: " + debug.toString());
@@ -29,18 +29,27 @@ if (isApache) {
     console.log("Build for Apache2");
 }
 
-const config = {
-        entry: ['babel-polyfill', "./src/index.tsx"],
+const entry = !debug
+    ? {
+        modern: ["babel-regenerator-runtime", "./src/index.tsx"],
+        legacy: ["babel-polyfill", "./src/index.tsx"],
+    }
+    : [ "webpack-dev-server/client?http://0.0.0.0:8089/", "babel-regenerator-runtime", "./src/index.tsx"];
 
+const config = {
+        entry,
         devServer: {
+            host: '0.0.0.0',
             publicPath: "/",
             contentBase: './web',
             noInfo: false,
             hot: true,
             inline: true,
-            open: true,
             historyApiFallback: true,
             port: 8089,
+            stats: { 
+                colors: true 
+            }
         },
 
         output: {
@@ -52,12 +61,14 @@ const config = {
         devtool: debug ? "source-map" : false,
 
         resolve: {
-            extensions: [".ts", ".tsx", ".js", ".json", ".jsx",],
+            extensions: [".ts", ".tsx", ".js", ".json", ".jsx", ".css",],
             modules: [
                 path.resolve('node_modules'),
                 path.resolve('src'),
-                path.resolve('styles'),
             ],
+            alias: {
+                normalize: path.join(__dirname, '/node_modules/normalize.css'),
+            }
         },
 
         module: {
@@ -65,12 +76,7 @@ const config = {
                 {
                     test: /\.(css|scss)$/,
                     loader: ExtractTextPlugin.extract({
-                            fallback: {
-                                loader: 'style-loader',
-                                options: {
-                                    sourceMap: debug,
-                                }
-                            },
+                            fallback: "style-loader",
                             use: [
                                 {
                                     loader: 'css-loader',
@@ -83,7 +89,7 @@ const config = {
                                     options: {
                                         plugins: function (loader) {
                                             const plugins = [
-                                                require('autoprefixer')(),
+                                                require('autoprefixer')({remove: false}),
                                             ];
                                             if (!debug) {
                                                 plugins.push(require('cssnano')());
@@ -100,7 +106,6 @@ const config = {
                                             path.resolve(__dirname + './styles'),
                                             path.resolve(__dirname, "./node_modules/compass-mixins/lib"),
                                         ],
-                                        sourceMap: debug,
                                     },
                                 },
                             ],
@@ -124,13 +129,20 @@ const config = {
                         {
                             loader: "babel-loader",
                             query: {
-                                presets: ["latest"],
+                                presets: [
+                                    'react',
+                                    ['env', {
+                                        "targets": {
+                                            "browsers": ["last 2 versions", "safari >= 10", "ie >= 11"],
+                                        },
+                                    }],
+                                ],
+                                "plugins": ["transform-object-rest-spread"]
                             },
                         },
                         "awesome-typescript-loader",
                     ],
-                }
-                ,
+                },
                 {
                     test: /\.jsx?$/,
                     exclude:
@@ -138,7 +150,15 @@ const config = {
                     loader:
                         "babel-loader",
                     query: {
-                        presets: ['es2015', 'react', 'stage-0', 'stage-1']
+                        presets: [
+                            'react',
+                            ['env', {
+                                "targets": {
+                                    "browsers": ["last 2 versions", "safari >= 10", "ie >= 11"],
+                                },
+                            }]
+                        ],
+                        "plugins": ["transform-object-rest-spread"]
                     },
                 },
                 {
@@ -155,7 +175,7 @@ const config = {
                 publicPath: '/',
             }),
             new webpack.NamedModulesPlugin(),
-            new CleanWebpackPlugin([path.resolve('./web')]),
+            new webpack.IgnorePlugin(/caniuse-lite\/data\/regions/),
             new HtmlWebpackPlugin({
                 title: "Wearesho",
                 template: path.resolve('./templates/index.ejs'),
@@ -165,6 +185,13 @@ const config = {
                     removeComments: !debug,
                     trimCustomFragments: !debug,
                     collapseWhitespace: !debug,
+                }
+            }),
+            new ScriptExtHtmlWebpackPlugin({
+                module: "modern",
+                custom: {
+                    test: "legacy",
+                    attribute: "nomodule"
                 }
             }),
             new webpack.optimize.ModuleConcatenationPlugin(),
@@ -242,6 +269,15 @@ if (debug) {
                 optipng: {
                     optimizationLevel: 4,
                 },
+                svgo: {
+                    removeEmptyAttrs: true,
+                    moveElemsAttrsToGroup: true,
+                    collapseGroups: true,
+                    convertStyleToAttrs: true,
+                    cleanupIDs: true,
+                    minifyStyles: true,
+                    cleanupAttrs: true,
+                },
                 pngquant: {
                     quality: '75-90',
                     speed: 3,
@@ -268,6 +304,5 @@ if (isApache) {
         ])
     );
 }
-
 
 module.exports = config;
